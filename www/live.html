@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--<link rel="stylesheet" href="//cdn.webrtc-experiment.com/style.css"> -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:100,100italic,300,500">
+    <style>
+        .notification-container {
+            width: 30%;
+            /* 90 */
+            
+            height: 50px;
+            background-color: #000;
+            border: 2px solid red;
+            padding: 10px;
+            margin-left: 5px;
+            opacity: 0.7;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
+            font-family: "Roboto";
+            bottom: 5%;
+            left: 10%;
+            /* 11%*/
+            
+            font-size: 12px;
+            position: absolute;
+            color: whitesmoke;
+            display: none;
+            text-align: center;
+        }
+        
+        .message-container2 {
+            left: 60%;
+        }
+        
+        audio,
+        video {
+            -moz-transition: all 1s ease;
+            -ms-transition: all 1s ease;
+            -o-transition: all 1s ease;
+            -webkit-transition: all 1s ease;
+            transition: all 1s ease;
+            vertical-align: top;
+            width: 100%;
+        }
+        
+        input {
+            border: 1px solid #d9d9d9;
+            border-radius: 1px;
+            font-size: 2em;
+            margin: .2em;
+            width: 30%;
+        }
+        
+        .setup {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+            font-size: 102%;
+            height: 47px;
+            margin-left: -9px;
+            margin-top: 8px;
+            position: absolute;
+        }
+        
+        p {
+            padding: 1em;
+        }
+        
+        li {
+            border-bottom: 1px solid rgb(189, 189, 189);
+            border-left: 1px solid rgb(189, 189, 189);
+            padding: .5em;
+        }
+        
+        .inputRoomBox {
+            padding: 10px;
+            border: solid 1px #dcdcdc;
+            transition: box-shadow 0.3s, border 0.3s;
+        }
+        
+        inputRoomBox:focus {
+            border: solid 1px #707070;
+            box-shadow: 0 0 5px 1px #969696;
+        }
+        
+        #strapline {
+            width: 100%;
+            height: 80px;
+            text-align: center;
+            margin: 0 auto;
+            font-size: 24px;
+            font-weight: bold;
+            color: #85141A;
+            font-family: Calibri, Helvetica, Arial;
+        }
+        
+        body {
+            background: #171718;
+        }
+        /*-------------------------------------*/
+        
+        .cf:before,
+        .cf:after {
+            content: "";
+            display: table;
+        }
+        
+        .cf:after {
+            clear: both;
+        }
+        
+        .cf {
+            zoom: 1;
+        }
+        /*-------------------------------------*/
+        
+        .form-wrapper {
+            width: 450px;
+            padding: 15px;
+            margin: 30 auto 50px auto;
+            background: #444;
+            background: rgba(0, 0, 0, .2);
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .4) inset, 0 1px 0 rgba(255, 255, 255, .2);
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .4) inset, 0 1px 0 rgba(255, 255, 255, .2);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .4) inset, 0 1px 0 rgba(255, 255, 255, .2);
+        }
+        
+        .form-wrapper input {
+            width: 430px;
+            height: 20px;
+            padding: 10px 5px;
+            float: left;
+            font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+            border: 0;
+            background: #eee;
+            -moz-border-radius: 3px 0 0 3px;
+            -webkit-border-radius: 3px 0 0 3px;
+            border-radius: 3px 0 0 3px;
+        }
+        
+        .form-wrapper input:focus {
+            outline: 0;
+            background: #fff;
+            -moz-box-shadow: 0 0 2px rgba(0, 0, 0, .8) inset;
+            -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, .8) inset;
+            box-shadow: 0 0 2px rgba(0, 0, 0, .8) inset;
+        }
+        
+        .form-wrapper input::-webkit-input-placeholder {
+            color: #999;
+            font-weight: normal;
+            font-style: italic;
+        }
+        
+        .form-wrapper input:-moz-placeholder {
+            color: #999;
+            font-weight: normal;
+            font-style: italic;
+        }
+        
+        .form-wrapper input:-ms-input-placeholder {
+            color: #999;
+            font-weight: normal;
+            font-style: italic;
+        }
+        
+        .form-wrapper button {
+            overflow: visible;
+            position: relative;
+            float: right;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            height: 40px;
+            width: 110px;
+            font: bold 15px/40px 'lucida sans', 'trebuchet MS', 'Tahoma';
+            color: #fff;
+            text-transform: uppercase;
+            background: #d83c3c;
+            -moz-border-radius: 0 3px 3px 0;
+            -webkit-border-radius: 0 3px 3px 0;
+            border-radius: 0 3px 3px 0;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, .3);
+        }
+        
+        .form-wrapper button:hover {
+            background: #e54040;
+        }
+        
+        .form-wrapper button:active,
+        .form-wrapper button:focus {
+            background: #c42f2f;
+        }
+        
+        .form-wrapper button:before {
+            content: '';
+            position: absolute;
+            border-width: 8px 8px 8px 0;
+            border-style: solid solid solid none;
+            border-color: transparent #d83c3c transparent;
+            top: 12px;
+            left: -6px;
+        }
+        
+        .form-wrapper button:hover:before {
+            border-right-color: #e54040;
+        }
+        
+        .form-wrapper button:focus:before {
+            border-right-color: #c42f2f;
+        }
+        
+        .form-wrapper button::-moz-focus-inner {
+            border: 0;
+            padding: 0;
+        }
+        
+        a {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        a:link {
+            text-decoration: none;
+            color: #85141A;
+        }
+        
+        a:visited {
+            text-decoration: none;
+            color: #85141A;
+        }
+        
+        .btn {
+            background: #d93434;
+            background-image: -webkit-linear-gradient(top, #d93434, #b82b2b);
+            background-image: -moz-linear-gradient(top, #d93434, #b82b2b);
+            background-image: -ms-linear-gradient(top, #d93434, #b82b2b);
+            background-image: -o-linear-gradient(top, #d93434, #b82b2b);
+            background-image: linear-gradient(to bottom, #d93434, #b82b2b);
+            -webkit-border-radius: 28;
+            -moz-border-radius: 28;
+            border-radius: 28px;
+            font-family: Arial;
+            color: #ffffff;
+            font-size: 22px;
+            padding: 10px 20px 10px 20px;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #fc3c3c;
+            background-image: -webkit-linear-gradient(top, #fc3c3c, #d93434);
+            background-image: -moz-linear-gradient(top, #fc3c3c, #d93434);
+            background-image: -ms-linear-gradient(top, #fc3c3c, #d93434);
+            background-image: -o-linear-gradient(top, #fc3c3c, #d93434);
+            background-image: linear-gradient(to bottom, #fc3c3c, #d93434);
+            text-decoration: none;
+        }
+        
+        .camlbl {
+            text-align: center;
+            font-size: 18px;
+            font-weight: normal;
+            font-family: Calibry, Helvetica, Arial;
+            color: #FFFFFF;
+        }
+    </style>
+
+    <!-- scripts used for broadcasting -->
+    <script src="//cdn.webrtc-experiment.com/firebase.js">
+    </script>
+    <script src="js/RTCMultiConnection.js">
+    </script>
+</head>
+
+<body style="width:100%;">
+    <article>
+        <!-- just copy this <section> and next script -->
+        <div id="webRTCBox">
+            <img src="https://tihlde.org/assets/2015/01/accenture-logo-29515.png" style="height:80px;" />
+            <section class="experiment">
+                <section>
+                    <div id="strapline">
+                        <div id="welcome_slogan">
+                            <h2>IIR VR Location Experience</h2>
+                        </div>
+                        <!--close welcome_slogan-->
+                    </div>
+                    <!--close strapline-->
+                    <span>
+                    <label style="font-weight:bold; font-size:18px;font-color:black;font-family: Calibri, Arial, Helvetica;color:#FFFFFF">Create Private Room:</label>
+                    <a href="" target="_blank" title="Open this link in new tab. Then your room will be private!" style="color:cyan">
+                        <code style="font-weight:normal;font-size:18px;font-color:black;font-family: Calibri, Arial, Helvetica;">
+                            <strong id="unique-token">#123456789</strong>
+                        </code>
+                    </a>
+                </span>
+                    <br/>
+                    <!-- list of all available broadcasting rooms -->
+
+                    <table style="width: 100%;margin-bottom:20px;" id="rooms-list">
+
+                    </table>
+                    <!-- local/remote videos container -->
+                    <div id="switchBox" style="width:100%;margin:0 auto;">
+
+                        <form class="form-wrapper cf" style="margin:0 auto;">
+                            <input id="broadcast-name" type="text" placeholder="Enter User Name">
+
+                            <span class="switch" id="setup-new-broadcast">
+	                   <span class="switch-border1">
+		<span class="switch-border2">
+			<input id="switch2" type="checkbox" />
+			<label for="switch2"></label>
+			<span class="switch-top"></span>
+                            <span class="switch-shadow"></span>
+                            <span class="switch-handle"></span>
+                            <span class="switch-handle-left"></span>
+                            <span class="switch-handle-right"></span>
+                            <span class="switch-handle-top"></span>
+                            <span class="switch-handle-bottom"></span>
+                            <span class="switch-handle-base"></span>
+                            <span class="switch-led switch-led-green">
+				<span class="switch-led-border">
+					<span class="switch-led-light">
+						<span class="switch-led-glow"></span>
+                            </span>
+                            </span>
+                            </span>
+                            <span class="switch-led switch-led-red">
+				<span class="switch-led-border">
+					<span class="switch-led-light">
+						<span class="switch-led-glow"></span>
+                            </span>
+                            </span>
+                            </span>
+                            </span>
+                            </span>
+                            </span>
+
+                        </form>
+                    </div>
+                    <!-- <button id="setup-new-broadcast" class="setup">Setup New Broadcast</button>-->
+                </section>
+
+
+
+
+            </section>
+        </div>
+        <div style="width:100%;margin-top:10%" id="container">
+            <div id="videos-container" style="width: 50%;float: left;display:block;"></div>
+            <div id="videos-container2" style="width: 50%;float: left;display:block;"></div>
+        </div>
+
+        <script>
+            var counter = 0;
+            var sessions = {};
+            var sessionStarted = false;
+            var videosContainer = document.getElementById('videos-container');
+            var videosContainer2 = document.getElementById('videos-container2');
+            document.getElementById('webRTCBox').style.display = 'none';
+            
+            setTimeout(function(){
+                console.log("PRINTING SESIION..")
+                console.log(sessionStarted);
+                if (sessionStarted){
+                    // document.getElementById('webRTCBox').style.display = 'none';
+                }else{
+                    document.getElementById('webRTCBox').style.display = 'block';
+                }
+                
+            },4000)
+            
+
+            function toggleSwitch() {
+                counter++;
+                if (counter % 2 == 0) {
+                    connection.close();
+                    videosContainer.style.display = 'none';
+                    videosContainer2.style.display = 'none';
+                } else {
+                    videosContainer.style.display = 'block';
+                    videosContainer2.style.display = 'block';
+                    if (!parent.connectionStarted) {
+                        parent.connectionStarted(true);
+                    }
+                }
+
+            }
+            var connection = new RTCMultiConnection();
+            connection.session = {
+                audio: true,
+                video: true,
+                oneway: true
+            };
+            connection.onstream = function (e) {
+                if (!parent.connectionStarted) {
+                    e.mediaElement.width = 600;
+                    videosContainer.insertBefore(e.mediaElement, videosContainer.firstChild);
+                    videosContainer2.innerHTML = videosContainer.innerHTML;
+                    rotateVideo(e.mediaElement);
+                    scaleVideos();
+                } else {
+                    e.stream.getAudioTracks()[0].enabled = false;
+                    e.stream.getVideoTracks()[0].enabled = false;
+                }
+            };
+
+            function rotateVideo(mediaElement) {
+
+            }
+            connection.onstreamended = function (e) {
+                e.mediaElement.style.opacity = 0;
+                rotateVideo(e.mediaElement);
+                setTimeout(function () {
+                    if (e.mediaElement.parentNode) {
+                        e.mediaElement.parentNode.removeChild(e.mediaElement);
+                    }
+                    scaleVideos();
+                }, 1000);
+            };
+            
+            connection.onNewSession = function (session) {
+                //console.log("Inside onNewSession")
+                if (sessions[session.sessionid]) return;
+
+                // console.log("After onNewSession")
+                
+                sessions[session.sessionid] = session;
+                sessionStarted = true;
+                document.getElementById('webRTCBox').style.display = 'none';
+                
+                if (parent.connectionStarted) {
+                    parent.connectionStarted(true);
+                }
+                 //document.getElementById('switchBox').style.display = "none";
+                //   document.getElementById('shareurl').style.display = "none";
+                //document.getElementById('webRTCBox').style.display = 'none';
+                /*------------------Notification----------------------------*/
+                var enterRoomNotificationLeft = document.createElement('div');
+                enterRoomNotificationLeft.id = 'enterRoomNotificationLeft';
+                enterRoomNotificationLeft.className = "notification-container";
+                enterRoomNotificationLeft.innerHTML = "Please wait till the video loads. Post viewing or to go back to IIR, please look Up or Down or Tilt cardboard sideways.";
+                document.body.appendChild(enterRoomNotificationLeft);
+
+                var enterRoomNotificationRight = document.createElement('div');
+                enterRoomNotificationRight.id = 'enterRoomNotificationRight';
+                enterRoomNotificationRight.className = "notification-container message-container2";
+                enterRoomNotificationRight.innerHTML = "Please wait till the video loads. Post viewing or to go back to IIR, please look Up or Down or Tilt cardboard sideways.";
+                document.body.appendChild(enterRoomNotificationRight);
+
+                enterRoomNotificationLeft.style.display = 'block';
+                enterRoomNotificationRight.style.display = 'block';
+                setInterval(function () {
+                    //enterRoomNotificationLeft.innerHTML = "";
+                    //enterRoomNotificationRight.innerHTML = "";
+
+                    //document.getElementById('enterRoomNotificationLeft').style.display = 'none';
+                    //document.getElementById('enterRoomNotificationRight').style.display = 'none';
+                }, 6000);
+
+                /*------------------Notification----------------------------*/
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td><label class="camlbl" >' + session.sessionid + ' is sharing his webcam in one-way direction!</label></td>' +
+                    '<td><button class="join btn">View Live IIR Stream</button></td>';
+                roomsList.insertBefore(tr, roomsList.firstChild);
+                var joinRoomButton = tr.querySelector('.join');
+                joinRoomButton.setAttribute('data-sessionid', session.sessionid);
+
+                joinRoomButton.onclick = streamVideo;
+
+                function streamVideo() {
+                    this.disabled = true;
+                    var sessionid = this.getAttribute('data-sessionid');
+                    session = sessions[sessionid];
+                    if (!session) throw 'No such session exists.';
+                    connection.join(session);
+                    //     document.getElementById('undefined').style.display = 'none';
+
+
+                };
+
+                setTimeout(function () {
+                    joinRoomButton.click();
+                    // scaleVideos();
+                    if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
+                        window.addEventListener('devicemotion', deviceMotionHandler, false);
+                    }
+                }, 1)
+            };
+
+
+
+            var videosContainer = document.getElementById('videos-container');
+            var videosContainer2 = document.getElementById('videos-container2');
+            var roomsList = document.getElementById('rooms-list');
+            var counter = 0;
+            document.getElementById('setup-new-broadcast').onclick = function () {
+                this.disabled = true;
+                if (counter == 0)
+                //connection.open(document.getElementById('broadcast-name').value || 'Accenture');
+                    if (document.getElementById('switch2').checked) {
+                    connection.open(document.getElementById('broadcast-name').value || 'Accenture');
+                    videosContainer.style.display = 'block';
+                    videosContainer2.style.display = 'block';
+                } else {
+                    connection.close();
+                    videosContainer.style.display = 'none';
+                    videosContainer2.style.display = 'none';
+                }
+            };
+            connection.onSessionClosed = function (e) {
+                sessions = {};
+                console.log("Inside CLOSE.###");
+                if (parent.connectionStarted) {
+                    parent.connectionStarted(false);
+                } else {
+                    window.location.href = 'index.html';
+                }
+
+            };
+            // setup signaling to search existing sessions
+            connection.connect();
+            (function () {
+                var uniqueToken = document.getElementById('unique-token');
+                if (uniqueToken)
+                    if (location.hash.length > 2) uniqueToken.parentNode.parentNode.parentNode.innerHTML = '<h2 id="shareurl" style="text-align:center;font-size:18px;font-weight:normal;font-family:Calibry, Helvetica, Arial;color:#FFFFFF;"><a href="' + location.href + '" target="_blank">Share this link</a> ' + location.href + '</h2>';
+                    else uniqueToken.innerHTML = uniqueToken.parentNode.parentNode.href = '#123456789'; //+ (Math.random() * new Date().getTime()).toString(36).toUpperCase().replace(/\./g, '-');
+            })();
+
+            function deviceMotionHandler(eventData) {
+                // Grab the acceleration including gravity from the results
+                //alert("here detected");
+                acceleration = eventData.accelerationIncludingGravity;
+                if (acceleration.z > 9 || acceleration.z < -9) {
+                    window.location.href = 'index.html';
+                }
+            }
+
+            function scaleVideos() {
+                var videos = document.querySelectorAll('video'),
+                    length = videos.length,
+                    video;
+                var minus = 130;
+                var windowHeight = 700;
+                var windowWidth = 600;
+                var windowAspectRatio = windowWidth / windowHeight;
+                var videoAspectRatio = 4 / 3;
+                var blockAspectRatio;
+                var tempVideoWidth = 0;
+                var maxVideoWidth = 0;
+                for (var i = length; i > 0; i--) {
+                    blockAspectRatio = i * videoAspectRatio / Math.ceil(length / i);
+                    if (blockAspectRatio <= windowAspectRatio) {
+                        tempVideoWidth = videoAspectRatio * windowHeight / Math.ceil(length / i);
+                    } else {
+                        tempVideoWidth = windowWidth / i;
+                    }
+                    if (tempVideoWidth > maxVideoWidth)
+                        maxVideoWidth = tempVideoWidth;
+                }
+                for (var i = 0; i < length; i++) {
+                    video = videos[i];
+                    if (video)
+                        video.width = maxVideoWidth - minus;
+                }
+            }
+            window.onresize = scaleVideos;
+
+            var container = document.getElementById('container');
+            container.addEventListener("click", function () {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.msRequestFullscreen) {
+                    container.msRequestFullscreen();
+                } else if (container.mozRequestFullScreen) {
+                    container.mozRequestFullScreen();
+                } else if (container.webkitRequestFullscreen) {
+                    container.webkitRequestFullscreen();
+                }
+            }, false);
+
+            window.addEventListener("orientationchange", function () {
+                window.location.href = 'index.html';
+            }, false);
+        </script>
+    </article>
+</body>
+
+
+<style>
+    body {
+        font-family: arial, verdana, sans-serif;
+        font-size: 8px;
+        background: #1E1E20;
+        text-align: center;
+    }
+    
+    .switch {
+        display: inline-block;
+        margin: 10em 2em;
+        position: relative;
+        border-radius: 3.5em;
+        -webkit-box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.2);
+        -moz-box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.2);
+    }
+    
+    .switch label {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+    }
+    
+    .switch input {
+        display: none;
+    }
+    
+    .switch span {
+        display: block;
+        -webkit-transition: top 0.2s;
+        -moz-transition: top 0.2s;
+        -ms-transition: top 0.2s;
+        -o-transition: top 0.2s;
+        transition: top 0.2s;
+    }
+    
+    .switch-border1 {
+        border: 0.1em solid #000;
+        border-radius: 3.5em;
+        -webkit-box-shadow: 0 0.2em rgba(255, 255, 255, 0.2);
+        -moz-box-shadow: 0 0.2em rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0.2em rgba(255, 255, 255, 0.2);
+    }
+    
+    .switch-border2 {
+        width: 6.6em;
+        height: 12.6em;
+        position: relative;
+        border: 0.1em solid #323232;
+        background-image: -webkit-gradient(linear, left top, right top, from(#2D2D2D), color-stop(0.5, #4B4B4B), to(#2D2D2D));
+        background-image: -webkit-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: -moz-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: -ms-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: -o-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: linear-gradient(to right, #2D2D2D, #4B4B4B, #2D2D2D);
+        border-radius: 3.4em;
+    }
+    
+    .switch-border2:before,
+    .switch-border2:after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        opacity: .3;
+        border-radius: 3.4em;
+    }
+    
+    .switch-border2:before {
+        background: -webkit-gradient(linear, left top, left bottom, from(#000), to(rgba(0, 0, 0, 0)));
+        background: -webkit-linear-gradient(#000, rgba(0, 0, 0, 0));
+        background: -moz-linear-gradient(#000, rgba(0, 0, 0, 0));
+        background: -ms-linear-gradient(#000, rgba(0, 0, 0, 0));
+        background: -o-linear-gradient(#000, rgba(0, 0, 0, 0));
+        background: linear-gradient(#000, rgba(0, 0, 0, 0));
+    }
+    
+    .switch-border2:after {
+        background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(#000));
+        background: -webkit-linear-gradient(rgba(0, 0, 0, 0), #000);
+        background: -moz-linear-gradient(rgba(0, 0, 0, 0), #000);
+        background: -ms-linear-gradient(rgba(0, 0, 0, 0), #000);
+        background: -o-linear-gradient(rgba(0, 0, 0, 0), #000);
+        background: linear-gradient(rgba(0, 0, 0, 0), #000);
+    }
+    
+    .switch-top {
+        width: 100%;
+        height: 84%;
+        position: absolute;
+        top: 8%;
+        left: 0;
+        z-index: 1;
+        background-image: -webkit-gradient(linear, left top, right top, from(#2D2D2D), color-stop(0.5, #4B4B4B), to(#2D2D2D));
+        background-image: -webkit-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: -moz-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: -ms-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: -o-linear-gradient(left, #2D2D2D, #4B4B4B, #2D2D2D);
+        background-image: linear-gradient(to right, #2D2D2D, #4B4B4B, #2D2D2D);
+        border-radius: 3.4em;
+    }
+    
+    .switch-shadow {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        border-radius: 3.4em;
+        -webkit-box-shadow: 0 0 2em black inset;
+        -moz-box-shadow: 0 0 2em black inset;
+        box-shadow: 0 0 2em black inset;
+    }
+    
+    .switch-handle-left,
+    .switch-handle-right {
+        content: '';
+        display: block;
+        width: 3.6em;
+        height: 0;
+        position: absolute;
+        top: 6.6em;
+        z-index: 2;
+        border-bottom: 4.5em solid #111;
+        border-left: 0.7em solid transparent;
+        border-right: 0.7em solid transparent;
+        border-radius: 0;
+    }
+    
+    .switch-handle-left {
+        left: 0.8em;
+    }
+    
+    .switch-handle-right {
+        right: 0.8em;
+    }
+    
+    .switch-handle {
+        width: 3.6em;
+        height: 4.5em;
+        position: absolute;
+        top: 6.6em;
+        left: 1.5em;
+        z-index: 3;
+        background: #333;
+        background-image: -webkit-gradient(linear, left top, right top, from(#111), color-stop(0.4, #777), color-stop(0.5, #888), color-stop(0.6, #777), to(#111));
+        background-image: -webkit-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: -moz-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: -ms-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: -o-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: linear-gradient(to right, #111, #777 40%, #888, #777 60%, #111);
+        border-radius: 0;
+    }
+    
+    .switch-handle-top {
+        width: 5em;
+        height: 5em;
+        position: absolute;
+        top: 8.5em;
+        left: 0.8em;
+        z-index: 4;
+        background-color: #555;
+        background-image: -webkit-gradient(linear, left top, right top, from(#5F5F5F), to(#878787));
+        background-image: -webkit-linear-gradient(left, #5F5F5F, #878787);
+        background-image: -moz-linear-gradient(left, #5F5F5F, #878787);
+        background-image: -ms-linear-gradient(left, #5F5F5F, #878787);
+        background-image: -o-linear-gradient(left, #5F5F5F, #878787);
+        background-image: linear-gradient(to right, #5F5F5F, #878787);
+        border-top: 0.2em solid #AEB2B3;
+        border-radius: 2.5em;
+    }
+    
+    .switch-handle-bottom {
+        width: 3.6em;
+        height: 3.6em;
+        position: absolute;
+        top: 4.7em;
+        left: 1.5em;
+        z-index: 3;
+        background: #333;
+        background-image: -webkit-gradient(linear, left top, right top, from(#111), color-stop(0.4, #777), color-stop(0.5, #888), color-stop(0.6, #777), to(#111));
+        background-image: -webkit-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: -moz-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: -ms-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: -o-linear-gradient(left, #111, #777 40%, #888, #777 60%, #111);
+        background-image: linear-gradient(to right, #111, #777 40%, #888, #777 60%, #111);
+        border-top: 0.2em solid #141414;
+        border-radius: 1.8em;
+    }
+    
+    .switch-handle-base {
+        width: 4.2em;
+        height: 4.2em;
+        position: absolute;
+        top: 3.8em;
+        left: 1.2em;
+        z-index: 2;
+        border-top: 0.2em solid rgba(255, 255, 255, 0.35);
+        border-radius: 2.1em;
+        -webkit-box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.8) inset;
+        -moz-box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.8) inset;
+        box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.8) inset;
+    }
+    
+    .switch-led {
+        position: absolute;
+        left: 2em;
+        border-radius: 1.4em;
+    }
+    
+    .switch-led-border {
+        border: 0.2em solid black;
+        border-radius: 1.3em;
+    }
+    
+    .switch-led-light {
+        border-radius: 1.1em;
+        -webkit-box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.5) inset;
+        -moz-box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.5) inset;
+        box-shadow: 0 0 0.5em rgba(255, 255, 255, 0.5) inset;
+    }
+    
+    .switch-led-glow {
+        width: 2em;
+        height: 2em;
+        position: relative;
+        border-radius: 1em;
+    }
+    
+    .switch-led-glow:before {
+        content: '';
+        display: block;
+        width: 0.6em;
+        height: 0.6em;
+        position: absolute;
+        top: 0.3em;
+        left: 0.7em;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 0.3em;
+        -webkit-box-shadow: 0 0 1em rgba(255, 255, 255, 0.75);
+        -moz-box-shadow: 0 0 1em rgba(255, 255, 255, 0.75);
+        box-shadow: 0 0 1em rgba(255, 255, 255, 0.75);
+    }
+    
+    .switch-led-glow:after {
+        content: '';
+        display: block;
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.2;
+        filter: alpha(opacity=20);
+        border: 1em solid #fff;
+        border-color: transparent #fff transparent #fff;
+        border-radius: 1em;
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+    
+    .switch-led:after {
+        display: block;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        color: #666;
+        font-family: arial, verdana, sans-serif;
+        font-weight: bold;
+        text-align: center;
+        text-shadow: 0 0.1em rgba(0, 0, 0, 0.7);
+    }
+    
+    .switch-led-green:after {
+        content: 'ON';
+        top: -1.8em;
+    }
+    
+    .switch-led-red:after {
+        content: 'OFF';
+        bottom: -1.8em;
+    }
+    
+    .switch-led-green {
+        top: -5em;
+        border-top: 0.1em solid rgba(0, 161, 75, 0.5);
+        border-bottom: 0.1em solid rgba(255, 255, 255, 0.25);
+    }
+    
+    .switch-led-green .switch-led-light {
+        background: rgb(0, 161, 75);
+        border: 0.1em solid rgb(0, 104, 56);
+    }
+    
+    .switch-led-red {
+        bottom: -5em;
+        border-top: 0.1em solid rgba(237, 28, 36, 0.2);
+        border-bottom: 0.1em solid rgba(255, 255, 255, 0.25);
+        -webkit-box-shadow: 0 0 3em rgb(237, 28, 36);
+        -moz-box-shadow: 0 0 3em rgb(237, 28, 36);
+        box-shadow: 0 0 3em rgb(237, 28, 36);
+    }
+    
+    .switch-led-red .switch-led-light {
+        background: rgb(237, 28, 36);
+        border: 0.1em solid rgb(161, 30, 45);
+    }
+    
+    .switch-led-red .switch-led-glow {
+        background: #fff;
+        background: rgba(255, 255, 255, 0.3);
+        filter: alpha(opacity=30);
+    }
+    /* Switch on */
+    
+    .switch input:checked~.switch-handle-left,
+    .switch input:checked~.switch-handle-right {
+        top: 1.5em;
+        border-bottom: 0;
+        border-top: 4.5em solid #111;
+    }
+    
+    .switch input:checked~.switch-handle {
+        top: 1.5em;
+    }
+    
+    .switch input:checked~.switch-handle-top {
+        top: -1em;
+        border-top: 0;
+        border-bottom: 0.2em solid #AEB2B3;
+    }
+    
+    .switch input:checked~.switch-handle-bottom {
+        top: 4.2em;
+        border-top: 0;
+        border-bottom: 0.2em solid #141414;
+    }
+    
+    .switch input:checked~.switch-handle-base {
+        top: 4.5em;
+        border-top: 0;
+        border-bottom: 0.2em solid rgba(255, 255, 255, 0.35);
+    }
+    
+    .switch input:checked~.switch-led-green {
+        -webkit-box-shadow: 0 0 3em rgb(0, 161, 75);
+        -moz-box-shadow: 0 0 3em rgb(0, 161, 75);
+        box-shadow: 0 0 3em rgb(0, 161, 75);
+    }
+    
+    .switch input:checked~.switch-led-green .switch-led-glow {
+        background: #fff;
+        background: rgba(255, 255, 255, 0.4);
+        filter: alpha(opacity=40);
+    }
+    
+    .switch input:checked~.switch-led-red {
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+    
+    .switch input:checked~.switch-led-red .switch-led-glow {
+        background: rgba(255, 255, 255, 0);
+        filter: alpha(opacity=0);
+    }
+</style>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Accenture Cardboard Experiment</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="style/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:100,100italic,300,500">
+</head>
+
+<body onload="sterioVideo()">
+    <div id="videos-container">
+        <img src="images/loading.png" class="loadingImg" id="leftLoad" style="float:left;margin-left:5%;width:40%;"></img>
+        <img src="images/loading.png" class="loadingImg" id="rightLoad" style="float:right;margin-right:5%;width:40%;"></img>
+        <video id="left" style="display:none;" autoplay>
+            <source type="video/mp4">
+                Video not supported
+        </video>
+        <canvas id='videoCanvas'></canvas>
+    </div>
+</body>
+
+<script>
+    /*------------------Notification----------------------------*/
+    var enterRoomNotificationLeft = document.createElement('div');
+    enterRoomNotificationLeft.id = 'enterRoomNotificationLeft';
+    enterRoomNotificationLeft.className = "video-container";
+    enterRoomNotificationLeft.innerHTML = "Loading Video... Look Up to Exit.";
+    document.body.appendChild(enterRoomNotificationLeft);
+
+    var enterRoomNotificationRight = document.createElement('div');
+    enterRoomNotificationRight.id = 'enterRoomNotificationRight';
+    enterRoomNotificationRight.className = "video-container message-container2";
+    enterRoomNotificationRight.innerHTML = "Loading Video... Look Up to Exit.";
+    document.body.appendChild(enterRoomNotificationRight);
+
+    enterRoomNotificationLeft.style.display = 'block';
+    enterRoomNotificationRight.style.display = 'block';
+    setInterval(function () {
+        //enterRoomNotificationLeft.innerHTML = "";
+        //enterRoomNotificationRight.innerHTML = "";
+
+        //document.getElementById('enterRoomNotificationLeft').style.display = 'none';
+        //document.getElementById('enterRoomNotificationRight').style.display = 'none';
+    }, 6000);
+
+    /*------------------Notification----------------------------*/
+
+    var left = document.getElementById('left');
+    //var right = document.getElementById('right');
+    //right.muted = true;
+
+    // left.addEventListener("contextmenu", function (e) { e.preventDefault(); e.stopPropagation(); }, false);
+
+    //right.addEventListener("contextmenu", function (e) { e.preventDefault(); e.stopPropagation(); }, false);
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var v = document.getElementById('left');
+        var canvas = document.getElementById('videoCanvas');
+        var context = canvas.getContext('2d');
+
+        var cw = 640;
+        var ch = 480;
+        canvas.width = cw;
+        canvas.height = ch;
+
+        v.addEventListener('play', function () {
+            draw(this, context, cw, ch);
+        }, false);
+
+    }, false);
+
+    function draw(v, c, w, h) {
+        if (v.paused || v.ended) return false;
+        c.drawImage(v, 0, 0, w, h);
+        setTimeout(draw, 20, v, c, w, h);
+    }
+
+
+
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    function sterioVideo() {
+        var vidurl = getParameterByName('url');
+        left.src = vidurl;
+
+        if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
+            // alert("here");
+            window.addEventListener('devicemotion', deviceMotionHandler, false);
+        }
+
+    }
+
+    function deviceMotionHandler(eventData) {
+        // Grab the acceleration including gravity from the results
+        //alert("here detected");
+        acceleration = eventData.accelerationIncludingGravity;
+        if (acceleration.z > 9 || acceleration.z < -9) {
+            window.location.href = 'index.html';
+        }
+    }
+
+
+    // Video completed, Go back to main IIR page.
+    left.addEventListener('ended', function () {
+        window.location.href = 'index.html';
+    });
+
+    /* left.ended = function()
+     {
+         console.log("Video has ended!!");
+     }; */
+
+    /*left.addEventListener('canplay', function () {
+       //alert("Can Play");
+
+        left.style.display = 'block';
+        left.play();
+        //playVideo();
+        //setTimeout(playVideo, 3000)
+    }); */
+    
+    left.oncanplay = function () {
+        //alert("Can Play");
+
+        left.style.display = 'block';
+        left.play();
+        //playVideo();
+        //setTimeout(playVideo, 3000)
+    };
+    
+
+
+    left.onplay = function () {
+        //alert("Can Play");
+
+        document.getElementById('leftLoad').style.display = 'none';
+        document.getElementById('rightLoad').style.display = 'none';
+
+        //playVideo();
+        //setTimeout(playVideo, 3000)
+    };
+
+    function playVideo() {
+        //    right.style.display = 'block';
+        //  left.play();
+        // right.play();
+    };
+
+    window.addEventListener("orientationchange", function () {
+        window.location.href = 'index.html';
+    }, false);
+
+
+    window.addEventListener('click', function () {
+        if (left.paused) {
+            left.play();
+            // right.play();
+        } else if (left.played) {
+            //left.pause();
+            // right.pause();
+        }
+    }, false);
+</script>
+</html>

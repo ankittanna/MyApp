@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Accenture VR</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link  rel="stylesheet" type="text/css" href="style/main.css">
+     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:100,100italic,300,500">
+</head>
+<body>
+    
+    <iframe id="webiframe" src='live.html#IIR' style="display:none;width:1px;height:1px"></iframe>
+    
+    <!--<video autoplay type='video/webm;codecs="vp8, vorbis"' src="videos/demo_1.webm"></video> -->
+
+    <div id="scene">
+        <!--<div id="startButton" style="color:white;height:100%;cursor:pointer;">
+        <center>
+            <h1 style="margin:5px;margin-top:20px;">Accenture IIR Cardboard Experience</h1>
+            <p style="margin:10px;margin-bottom:20px;">Place your phone into the cardboard and click anywhere when ready.</p>
+            <img src="images/cardboard.gif" style="max-width: 25%;" />
+        </center>
+        </div>-->
+    </div>
+    <audio type="audio/mp4" id="tut1audio" src="tuts/Tut1.m4a"></audio>
+    <audio type="audio/mp4" id="tut2audio" src="tuts/Tut2.m4a"></audio>
+    <audio type="audio/mp4" id="tut3audio" src="tuts/Tut3.m4a"></audio>
+    <audio type="audio/mp4" id="tut4audio" src="tuts/Tut4.m4a"></audio>
+    <audio type="audio/mp4" id="tut5audio" src="tuts/Tut5.m4a"></audio>
+    <audio type="audio/mp4" id="tut6audio" src="tuts/Tut6.m4a"></audio>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script>
+        var root = this;
+        var TVDetail=[];
+        var SCALE = 3;
+        var redirectURL = ""; 
+    </script>
+    <script src="js/three.min.js"></script>
+    <script src="js/Cardboard.js"></script>
+    <script src="js/StereoEffect.js"></script>
+    <script src="js/Cursor.js"></script>
+    <script src="js/DeviceOrientationControls.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/jstorage.js"></script>
+    <script src="js/TextLights.js"></script>
+    <script src="js/PhotoSphere.js"></script>
+    <script src="js/NavigationArrow.js"></script>
+    <script src="js/Textbox.js"></script>
+    <script src="js/helvetiker_regular.typeface.js"></script>
+    <script src="js/Hotspot.js"></script>
+    <script src="js/has.js"></script>
+    <script src="js/NoSleep.js"></script>
+    <script src="js/DetailImage.js"></script>
+    <script src="js/RoomEntrence.js"></script>
+    <script src="js/RoomConference.js"></script>
+    <script src="js/CSS3DRenderer.js"></script>
+    <script src="js/Tutorial1.js"></script>
+    <script src="js/Tutorial2.js"></script>
+    <script src="js/Tutorial3.js"></script>
+    <script src="js/Tutorial4.js"></script>
+    <script src="js/Tutorial5.js"></script>
+    <script src="js/Tutorial6.js"></script>
+    <script src="js/MainController.js"></script>
+    <!-- scripts used for broadcasting -->
+    <script src="//cdn.webrtc-experiment.com/firebase.js">
+    </script>
+    <script src="js/RTCMultiConnection.js">
+    </script>
+   
+    <script>  
+        $(function() {
+	// Initiate Insomnia PhoneGap Plugin
+    	try {
+    		cordova.exec(function(){}, function(){}, "Insomnia", "keepAwake", []);
+    	} catch (e){ }
+    });
+// initialize the screen
+       var cardboard, mainController, cursor;
+
+       var connectionFlag = false;
+
+        function connectionStarted(connectionStatus)
+        { 
+            connectionFlag = connectionStatus;
+        }
+       window.scrollTo(0,1);
+       //alert(navigator.network.connection.type);
+
+        function setup() {
+
+            cardboard = new Cardboard();
+
+            mainController = new MainController();
+            cardboard.scene.add(mainController);
+
+            cursor = new Cursor();
+            cardboard.camera.add(cursor);
+            cursor.position.z = -3 * SCALE;
+            cursor.lookAt(cardboard.camera.position);
+
+
+            cardboard.effect.separation = 0;
+
+            if (!has.mobile) {
+                setTimeout(function () {
+                    cardboard.orbitControls.target.set(0, 0.3, 1);
+                }, 0);
+            }
+
+            cardboard.update = function () {
+                Cardboard.prototype.update.call(this);
+                mainController.update();
+            };
+
+            document.getElementById('scene').appendChild(cardboard.renderer.domElement);
+
+            // Start
+            root.MainController = MainController;
+            root.Cursor = Cursor;
+            
+           
+
+        }
+
+        //$("#startButton").on("click", function(){
+        	var noSleep = new NoSleep();
+        	noSleep.enable();
+        //	$(this).remove();
+        	setup();
+      //  });
+        
+       /* SomApi.account = "SOM524dca9d0aae6"; //your API Key here 
+        SomApi.domainName = "iir-sage1.azurewebsites.net"; //your domain or sub-domain here 
+        SomApi.config.sustainTime = 4;
+        SomApi.onTestCompleted = onTestCompleted;
+        SomApi.onError = onTestError;
+        
+        SomApi.startTest();
+        
+        function onTestCompleted(testResult) { 
+            alert(JSON.stringify(testResult));
+            msgDiv.innerHTML =
+        "<h3>"+
+        "Download: "+testResult.download+
+        "Upload: "+testResult.upload+
+        "Latency: "+testResult.latency+
+        "Jitter: "+testResult.jitter+
+        "Test Server: "+testResult.testServer +"<br/>"+ "IP: " +testResult.ip_address +"<br/>"+ "Hostname: " +testResult.hostname +"<br/>"; 
+        }
+        
+        function onTestError(error) {
+        msgDiv.innerHTML = "Error "+ error.code + ": "+error.message;
+        }*/
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.cordova.hellocordova" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <preference name="loglevel" value="DEBUG" />
+    <allow-intent href="market:*" />
+    <name>Accenture IIR</name>
+    <description>
+        Experience the latest technologies of Accenture Industry Innovation Room(IIR) at the comfort of your seat. IIR is a high-tech center where it helps in visualizing the "art of the possible" for innovation-led industry value creation. You can walk through various demos that have already happened in the IIR or also watch the live stream of current demos going on.
+
+        Google Cardboard would be required for this app.
+    </description>
+    <author email="dhanashree.dalal@accenture.com">
+        FED Innovation Team
+    </author>
+    <content src="http://iir-sage1.azurewebsites.net" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="SplashScreen">
+        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
+        <param name="onload" value="true" />
+    </feature>
+</widget>
